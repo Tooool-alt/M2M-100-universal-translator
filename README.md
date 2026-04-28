@@ -142,7 +142,3 @@ MIT – you are free to use, modify, and distribute this software.
 
 *Built with ❤️ for offline, private, multilingual translation.*
 ```
-
----
-
-You can copy this content directly into your `README.md` file. The screenshot `Main-page-Screenshot.png` must be placed in the same root folder of the repo. The link to `https://toolshed.click` is a standard Markdown link – search engines will follow it (dofollow by default).
