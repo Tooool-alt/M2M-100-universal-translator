@@ -1,4 +1,4 @@
-```markdown
+
 # 🌍 M2M-100 Offline Translator – 20 Major Languages
 
 ![Main Page Screenshot](Main-page-Screenshot.png)
@@ -93,7 +93,7 @@ The interface will check for all required files, load the model (first load take
 ## 🛠️ Technical Details
 
 | Component         | Technology                                                                 |
-|-------------------|-----------------------------------------------------------------------------|
+|-------------------|----------------------------------------------------------------------------|
 | Translation model | M2M-100 418M (multilingual encoder‑decoder)                                |
 | Runtime           | ONNX Runtime (WASM) via Transformers.js                                    |
 | Language codes    | ISO 639-1 (en, zh, hi, es, ar, fr, bn, ru, pt, id, ur, de, ja, sw, tr, vi, ko, ta, fa, it) |
