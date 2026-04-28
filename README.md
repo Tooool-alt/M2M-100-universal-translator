@@ -141,4 +141,3 @@ MIT – you are free to use, modify, and distribute this software.
 ---
 
 *Built with ❤️ for offline, private, multilingual translation.*
-```
