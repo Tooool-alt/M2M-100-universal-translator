@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M2M-100 Translator | 20 Languages</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 24px 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #1e293b;
+            padding: 28px 32px;
+            border-radius: 32px;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(0px);
+            transition: all 0.2s;
+        }
+
+        h1 {
+            color: #38bdf8;
+            text-align: center;
+            font-weight: 700;
+            font-size: 2rem;
+            margin: 0 0 0.25rem 0;
+            letter-spacing: -0.3px;
+        }
+
+        .badge {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #334155;
+            display: inline-block;
+            width: 100%;
+            padding-bottom: 10px;
+        }
+
+        .lang-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0 25px;
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 28px;
+        }
+
+        .lang-selector {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .lang-selector label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #7e8ba3;
+            margin-bottom: 8px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 60px;
+            color: #f1f5f9;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+        }
+
+        select:hover {
+            border-color: #38bdf8;
+            background-color: #1e293b;
+        }
+
+        .arrow-icon {
+            font-size: 2rem;
+            align-self: center;
+            color: #38bdf8;
+            background: #0f172a;
+            padding: 8px 12px;
+            border-radius: 60px;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            margin: 10px 0;
+            padding: 16px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 24px;
+            color: #f8fafc;
+            font-size: 15px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            resize: vertical;
+            transition: 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #38bdf8;
+            border: none;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #0f172a;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 12px 0 8px;
+            box-shadow: 0 2px 6px rgba(56, 189, 248, 0.3);
+        }
+
+        button:disabled {
+            background: #475569;
+            color: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        button:not(:disabled):hover {
+            background: #7dd3fc;
+            transform: translateY(-1px);
+        }
+
+        #output {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 24px;
+            margin-top: 24px;
+            min-height: 130px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 16px;
+            line-height: 1.55;
+            border-left: 5px solid #38bdf8;
+            font-family: 'Segoe UI', 'system-ui';
+        }
+
+        #output[dir="rtl"] {
+            border-left: none;
+            border-right: 5px solid #38bdf8;
+            text-align: right;
+        }
+
+        #output[dir="ltr"] {
+            text-align: left;
+        }
+
+        #status {
+            padding: 12px 18px;
+            border-radius: 60px;
+            margin: 15px 0 15px;
+            font-weight: 500;
+            text-align: center;
+            background: #1e293b;
+        }
+
+        .success {
+            background: #15803d;
+            color: #e6f7e6;
+        }
+
+        .error {
+            background: #b91c1c;
+            color: #ffe0e0;
+        }
+
+        .loading {
+            background: #d97706;
+            color: #1e1a0c;
+        }
+
+        .file-list {
+            background: #0f172a;
+            padding: 16px;
+            border-radius: 20px;
+            margin: 18px 0 16px;
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            max-height: 260px;
+            overflow-y: auto;
+            border: 1px solid #2d3a5e;
+        }
+
+        .file-list hr {
+            border-color: #2d3a5e;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 11px;
+            margin-top: 24px;
+            color: #5b6e8c;
+        }
+
+        .language-count {
+            font-size: 0.7rem;
+            background: #0f172a;
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 30px;
+            margin-left: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🌍 M2M-100 · 20 Languages</h1>
+    <div class="badge">Universal translator · Offline ONNX · 418M parameters</div>
+
+    <div id="status" class="loading">⚙️ Initializing local transformer engine...</div>
+
+    <!-- model file inspector -->
+    <div class="file-list" id="fileList"></div>
+
+    <div class="lang-panel">
+        <div class="lang-selector">
+            <label>📤 SOURCE LANGUAGE</label>
+            <select id="srcLang"></select>
+        </div>
+        <div class="arrow-icon">⇄</div>
+        <div class="lang-selector">
+            <label>📥 TARGET LANGUAGE</label>
+            <select id="tgtLang"></select>
+        </div>
+    </div>
+
+    <textarea id="inputText" placeholder="Enter text to translate (support for 20 major languages)..."></textarea>
+    <button id="translateBtn" disabled>✨ Translate</button>
+    <div id="output"></div>
+    <footer>⚡ Model: Xenova/m2m100_418M (quantized) — all files from local /onnx/ folder | 20 languages: English, Chinese, Hindi, Spanish, Arabic, French, Bengali, Russian, Portuguese, Indonesian, Urdu, German, Japanese, Swahili, Turkish, Vietnamese, Korean, Tamil, Persian, Italian</footer>
+</div>
+
+<script type="importmap">
+    {
+        "imports": {
+            "@huggingface/transformers": "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0"
+        }
+    }
+</script>
+
+<script type="module">
+    import { pipeline, env } from '@huggingface/transformers';
+    
+    // ============================================
+    // CONFIGURATION: local ONNX model directory
+    // ============================================
+    const MODEL_BASE_PATH = 'http://localhost:8000/models/Xenova/m2m100_418M/onnx/';
+    
+    // Force local-only loading (no remote hub)
+    env.allowRemoteModels = false;
+    env.allowLocalModels = true;
+    
+    // Override file resolver to map any requested file to our local ONNX folder
+    env.resolveFile = function(fileName, modelName) {
+        const cleanName = fileName.split('/').pop();
+        const fullPath = MODEL_BASE_PATH + cleanName;
+        console.log(`[resolver] ${fileName} → ${fullPath}`);
+        return fullPath;
+    };
+    
+    // ============================================
+    // TOP 20 WORLD LANGUAGES (by native/speakers + global influence)
+    // Codes match M2M-100 supported languages (ISO 639-1 mostly)
+    // ============================================
+    const LANGUAGE_LIST = [
+        { code: "en", name: "English", flag: "🇬🇧", rtl: false },
+        { code: "zh", name: "Chinese (Simplified)", flag: "🇨🇳", rtl: false },
+        { code: "hi", name: "Hindi", flag: "🇮🇳", rtl: false },
+        { code: "es", name: "Spanish", flag: "🇪🇸", rtl: false },
+        { code: "ar", name: "Arabic", flag: "🇸🇦", rtl: true },
+        { code: "fr", name: "French", flag: "🇫🇷", rtl: false },
+        { code: "bn", name: "Bengali", flag: "🇧🇩", rtl: false },
+        { code: "ru", name: "Russian", flag: "🇷🇺", rtl: false },
+        { code: "pt", name: "Portuguese", flag: "🇵🇹", rtl: false },
+        { code: "id", name: "Indonesian", flag: "🇮🇩", rtl: false },
+        { code: "ur", name: "Urdu", flag: "🇵🇰", rtl: true },
+        { code: "de", name: "German", flag: "🇩🇪", rtl: false },
+        { code: "ja", name: "Japanese", flag: "🇯🇵", rtl: false },
+        { code: "sw", name: "Swahili", flag: "🇹🇿", rtl: false },
+        { code: "tr", name: "Turkish", flag: "🇹🇷", rtl: false },
+        { code: "vi", name: "Vietnamese", flag: "🇻🇳", rtl: false },
+        { code: "ko", name: "Korean", flag: "🇰🇷", rtl: false },
+        { code: "ta", name: "Tamil", flag: "🇮🇳", rtl: false },
+        { code: "fa", name: "Persian", flag: "🇮🇷", rtl: true },
+        { code: "it", name: "Italian", flag: "🇮🇹", rtl: false }
+    ];
+    
+    // DOM elements
+    const statusDiv = document.getElementById('status');
+    const fileListDiv = document.getElementById('fileList');
+    const translateBtn = document.getElementById('translateBtn');
+    const outputDiv = document.getElementById('output');
+    const inputTextarea = document.getElementById('inputText');
+    const srcLangSelect = document.getElementById('srcLang');
+    const tgtLangSelect = document.getElementById('tgtLang');
+    
+    let translator = null;
+    
+    // Populate language dropdowns
+    function populateLanguageDropdowns() {
+        LANGUAGE_LIST.forEach(lang => {
+            const optionSrc = document.createElement('option');
+            optionSrc.value = lang.code;
+            optionSrc.textContent = `${lang.flag} ${lang.name}`;
+            srcLangSelect.appendChild(optionSrc);
+            
+            const optionTgt = document.createElement('option');
+            optionTgt.value = lang.code;
+            optionTgt.textContent = `${lang.flag} ${lang.name}`;
+            tgtLangSelect.appendChild(optionTgt);
+        });
+        // Set defaults: src English, tgt Spanish or Chinese? Keep English -> Spanish as demo
+        srcLangSelect.value = 'en';
+        tgtLangSelect.value = 'es';
+    }
+    
+    // check model files via HEAD requests (6 core files)
+    async function checkModelFiles() {
+        const criticalFiles = [
+            'config.json',
+            'tokenizer.json',
+            'vocab.json',
+            'special_tokens_map.json',
+            'encoder_model_quantized.onnx',
+            'decoder_model_merged_quantized.onnx'
+        ];
+        
+        let html = `<strong>📁 Model path:</strong> ${MODEL_BASE_PATH}<br><hr>`;
+        let allGood = true;
+        
+        for (const file of criticalFiles) {
+            const url = MODEL_BASE_PATH + file;
+            try {
+                const res = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+                if (res.ok) {
+                    const size = res.headers.get('content-length');
+                    const sizeStr = size ? ` (${(parseInt(size) / 1048576).toFixed(1)} MB)` : '';
+                    html += `✅ <span style="color:#4ade80;">${file}</span>${sizeStr}<br>`;
+                } else {
+                    html += `❌ <span style="color:#f97316;">${file}</span> HTTP ${res.status}<br>`;
+                    allGood = false;
+                }
+            } catch (err) {
+                html += `❌ <span style="color:#ef4444;">${file}</span> network error / not reachable<br>`;
+                allGood = false;
+            }
+        }
+        
+        if (allGood) {
+            html += `<hr><span style="color:#2dd4bf;">✓ All required model files present. Loading pipeline...</span>`;
+        } else {
+            html += `<hr><span style="color:#facc15;">⚠️ Missing files. Ensure server serves ONNX exports at:<br> ${MODEL_BASE_PATH}</span>`;
+        }
+        fileListDiv.innerHTML = html;
+        return allGood;
+    }
+    
+    // Initialize translator pipeline (M2M100)
+    async function initTranslator() {
+        try {
+            statusDiv.textContent = '🔍 Validating local model files...';
+            statusDiv.className = 'loading';
+            const filesExist = await checkModelFiles();
+            if (!filesExist) {
+                throw new Error(`Model files missing at ${MODEL_BASE_PATH}. Place ONNX files there and restart server.`);
+            }
+            
+            statusDiv.textContent = '⏳ Loading M2M-100 (418M quantized) via ONNX runtime — first load may take 20-40 seconds';
+            statusDiv.className = 'loading';
+            
+            translator = await pipeline(
+                'translation',
+                'Xenova/m2m100_418M',
+                {
+                    device: 'wasm',
+                    local_files_only: true,
+                    use_fp16: false,
+                    progress_callback: (progress) => {
+                        if (progress.status === 'loading') {
+                            statusDiv.textContent = `⏳ Loading model: ${progress.task || 'initializing'}...`;
+                        }
+                    }
+                }
+            );
+            
+            statusDiv.textContent = '✅ Model ready! Translate between 20 languages.';
+            statusDiv.className = 'success';
+            translateBtn.disabled = false;
+            console.log('[system] Translator ready for 20 languages');
+        } catch (err) {
+            console.error('Init error:', err);
+            statusDiv.textContent = `❌ Initialization failed: ${err.message || 'unknown error'}. Verify path & CORS.`;
+            statusDiv.className = 'error';
+            translateBtn.disabled = true;
+        }
+    }
+    
+    // Perform translation with src/tgt language codes
+    async function performTranslation() {
+        const text = inputTextarea.value.trim();
+        if (!text) {
+            outputDiv.textContent = '⚠️ Please enter some text to translate.';
+            outputDiv.setAttribute('dir', 'ltr');
+            return;
+        }
+        
+        const srcCode = srcLangSelect.value;
+        const tgtCode = tgtLangSelect.value;
+        
+        // find RTL info for target language
+        const tgtLangInfo = LANGUAGE_LIST.find(lang => lang.code === tgtCode);
+        const isRtl = tgtLangInfo ? tgtLangInfo.rtl : false;
+        if (isRtl) {
+            outputDiv.setAttribute('dir', 'rtl');
+        } else {
+            outputDiv.setAttribute('dir', 'ltr');
+        }
+        
+        outputDiv.textContent = '⏳ Translating (this may take several seconds)...';
+        translateBtn.disabled = true;
+        
+        try {
+            const result = await translator(text, {
+                src_lang: srcCode,
+                tgt_lang: tgtCode
+            });
+            const translated = result[0].translation_text;
+            outputDiv.textContent = translated;
+        } catch (error) {
+            console.error('Translation failed', error);
+            outputDiv.textContent = `❌ Translation error: ${error.message || 'Check console'}. Ensure language pair is supported.`;
+            outputDiv.setAttribute('dir', 'ltr');
+        } finally {
+            translateBtn.disabled = false;
+        }
+    }
+    
+    // Helper: swap source and target languages
+    function swapLanguages() {
+        const srcVal = srcLangSelect.value;
+        const tgtVal = tgtLangSelect.value;
+        srcLangSelect.value = tgtVal;
+        tgtLangSelect.value = srcVal;
+        // optional: clear output or keep, but translate later
+        if (outputDiv.textContent && !outputDiv.textContent.includes('⚠️')) {
+            outputDiv.textContent = '🔄 Languages swapped. Click Translate again.';
+        }
+    }
+    
+    // ----- setup UI events, keyboard shortcuts -----
+    populateLanguageDropdowns();
+    
+    translateBtn.addEventListener('click', performTranslation);
+    
+    // Add a swap button in UI (nice for 20 languages)
+    const langPanel = document.querySelector('.lang-panel');
+    const swapButton = document.createElement('button');
+    swapButton.textContent = '⇄ Swap Languages';
+    swapButton.style.width = 'auto';
+    swapButton.style.padding = '8px 18px';
+    swapButton.style.margin = '0';
+    swapButton.style.background = '#2d3a5e';
+    swapButton.style.color = '#e2e8f0';
+    swapButton.style.fontSize = '0.8rem';
+    swapButton.style.boxShadow = 'none';
+    swapButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        swapLanguages();
+    });
+    // Insert after arrow icon? simpler: add to lang-panel after the arrow div
+    const arrowDiv = document.querySelector('.arrow-icon');
+    if (arrowDiv && langPanel) {
+        const wrapper = document.createElement('div');
+        wrapper.style.display = 'flex';
+        wrapper.style.alignItems = 'center';
+        wrapper.style.gap = '8px';
+        arrowDiv.parentNode.insertBefore(wrapper, arrowDiv.nextSibling);
+        wrapper.appendChild(swapButton);
+    } else {
+        langPanel.appendChild(swapButton);
+    }
+    
+    // Ctrl+Enter translation
+    inputTextarea.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            if (!translateBtn.disabled) performTranslation();
+        }
+    });
+    
+    // Additional: when target language changes, direction hint for output placeholder
+    tgtLangSelect.addEventListener('change', () => {
+        const tgtCode = tgtLangSelect.value;
+        const rtlLang = LANGUAGE_LIST.find(l => l.code === tgtCode && l.rtl);
+        if (rtlLang && outputDiv.textContent && !outputDiv.textContent.includes('⏳')) {
+            // only adjust direction for existing non-transient content
+            if (!outputDiv.textContent.includes('❌') && !outputDiv.textContent.includes('⚠️')) {
+                outputDiv.setAttribute('dir', 'rtl');
+            }
+        } else if (!rtlLang && outputDiv.textContent) {
+            outputDiv.setAttribute('dir', 'ltr');
+        }
+    });
+    
+    // init everything
+    initTranslator();
+</script>
+</body>
+</html>
