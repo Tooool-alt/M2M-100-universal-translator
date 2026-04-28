@@ -1,7 +1,3 @@
-Here's a professional, section‑by‑section README in English for your GitHub repository. It includes a reference to your screenshot and a dofollow link to your website.
-
----
-
 ```markdown
 # 🌍 M2M-100 Offline Translator – 20 Major Languages
 
