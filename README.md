@@ -130,7 +130,7 @@ await pipeline('translation', 'Xenova/m2m100_418M', {
 This project is part of a larger collection of **free online tools** (unit converter, colour picker, password generator, QR code reader/creator, and more) maintained by **[toolshed.click](https://toolshed.click)**.
 
 Visit [https://toolshed.click](https://toolshed.click) for dozens of other handy utilities – all client‑side, no ads, no tracking.
-
+main web page [https://tooool-alt.github.io/M2M-100-universal/](https://tooool-alt.github.io/M2M-100-universal/)
 ---
 
 ## 📄 License
